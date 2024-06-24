@@ -10,8 +10,9 @@ export default function Hangman() {
     const [revealedGuesses, setRevealedGuesses] = useState(generateHangmanLetters([], targetWord))
     const [numberOfGuesses, setNumberOfGuesses] = useState(0); // int
 
-    const isGameOver = guessedLetters.length === missLimit;
+    const isGameLost = guessedLetters.length === missLimit;
     const isGameWon = !revealedGuesses.includes('_');
+    const isGameOver = isGameWon || isGameLost; // disable everything when this is true
     
     const keys = generateKeys();
 
@@ -42,7 +43,7 @@ export default function Hangman() {
         <div>
             <h1>Hangman Game</h1>
             {isGameWon && <h2>You Win!</h2>}
-            {isGameOver && <h2>You Lose: too many guesses</h2>}
+            {isGameLost && <h2>You Lose: too many guesses</h2>}
             <h2>{revealedGuesses}</h2>
             <h3>Guessed Letters: {guessedLetters}</h3>
             <p>Number of guesses: {numberOfGuesses}</p>
