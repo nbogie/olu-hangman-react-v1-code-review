@@ -1,3 +1,6 @@
+import wordlist from "./wordlist";
+
 export default function getRandomWord() {
-    return "test";
+    const randomIndex = Math.floor(Math.random() * wordlist.length)
+    return wordlist[randomIndex];
 }
