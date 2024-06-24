@@ -5,20 +5,19 @@ import { generateHangmanLetters } from "./utils/hangman-logic";
 
 export default function Hangman() {
     const targetWord = getRandomWord()
-    const missLimit = targetWord.length + 1;
     const [guessedLetters, setGuessedLetters] = useState([]) // string[]
     const [revealedGuesses, setRevealedGuesses] = useState(generateHangmanLetters([], targetWord))
     const [numberOfGuesses, setNumberOfGuesses] = useState(0); // int
 
+    const missLimit = targetWord.length + 1;
     const isGameLost = guessedLetters.length === missLimit;
     const isGameWon = !revealedGuesses.includes('_');
-    const isGameOver = isGameWon || isGameLost; // disable everything when this is true
+    const isGameOver = isGameWon || isGameLost;
     
     const keys = generateKeys();
 
     const renderedKeyboard = keys.map((tile, index) => {
         function handleTileClicked(letter){
-            tile.isClicked = true;
             setNumberOfGuesses(currVal => currVal + 1);
             setGuessedLetters(currArr => {
                 const updatedOutput = generateHangmanLetters([...currArr, letter], targetWord)
@@ -27,8 +26,14 @@ export default function Hangman() {
                 return [...currArr, letter]})
         }
 
+        const letterHasBeenGuessed = guessedLetters.includes(tile.letter)
+
+        if (letterHasBeenGuessed || isGameOver){
+            tile.isClicked = true;
+        }
+
         return (
-            <button key={index} className="tile" onClick={() => {handleTileClicked(tile.letter)}}>
+            <button key={index} className="tile" onClick={() => {handleTileClicked(tile.letter)}} disabled={tile.isClicked}>
                 {tile.letter}
             </button>
         )
