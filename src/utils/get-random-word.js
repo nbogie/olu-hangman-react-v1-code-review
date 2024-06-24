@@ -1,3 +1,3 @@
 export default function getRandomWord() {
-    return "";
+    return "test";
 }

@@ -1,4 +1,8 @@
+import Tile from './tile.js'
+
 export default function generateKeys(){
     const qwerty = "qwertyuiopasdfghjklzxcvbnm"
-    return qwerty.split('');
+    const keyCharacters =  qwerty.split('');
+
+    return keyCharacters.map(key => new Tile(key));
 }
