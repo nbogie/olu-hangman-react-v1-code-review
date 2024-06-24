@@ -17,6 +17,17 @@ select {
     font: inherit;
 }
 
+.game{
+    padding: 10px;
+    margin: 10px;
+    align-content: center;
+
+}
+
+.revealed-guesses {
+    letter-spacing: 5px;
+}
+
 .keyboard{
     display: flex;
     flex-wrap: wrap;

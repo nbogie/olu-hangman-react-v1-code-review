@@ -45,11 +45,11 @@ export default function Hangman() {
         setRevealedGuesses(generateHangmanLetters([], targetWord))
     }
     return (
-        <div>
+        <div className="game">
             <h1>Hangman Game</h1>
             {isGameWon && <h2>You Win!</h2>}
             {isGameLost && <h2>You Lose: too many guesses</h2>}
-            <h2>{revealedGuesses}</h2>
+            <h2 className="revealed-guesses">{revealedGuesses}</h2>
             <h3>Guessed Letters: {guessedLetters}</h3>
             <p>Number of guesses: {numberOfGuesses}</p>
             <div className="keyboard">
