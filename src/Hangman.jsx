@@ -50,8 +50,8 @@ export default function Hangman() {
         <div className="game">
             <h1>Hangman Game</h1>
             {isGameWon && <h2>You Win!</h2>}
-            {isGameLost && !isGameWon && <h2>You Lose: Too many guesses - the word was {targetWord}</h2>}
-            <h2 className="revealed-guesses">{revealedGuesses}</h2>
+            {isGameLost && !isGameWon && <h2>You lose, too many guesses</h2>}
+            <h2 className="revealed-guesses">{!isGameOver ? revealedGuesses : targetWord}</h2>
             <h3>Guessed Letters: {guessedLetters}</h3>
             <p>Number of guesses: {numberOfGuesses}</p>
             <div className="keyboard">
