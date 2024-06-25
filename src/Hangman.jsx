@@ -9,7 +9,7 @@ export default function Hangman() {
     const [targetWord, setTargetWord] = useState(randomWord);
     const [guessedLetters, setGuessedLetters] = useState([]);
     let revealedGuesses = generateHangmanLetters(guessedLetters, targetWord);
-    let numberOfMistakes = determineMistakes(guessedLetters, targetWord)
+    let numberOfMistakes = determineMistakes(guessedLetters, targetWord);
 
     const missLimit = targetWord.length;
     const isGameLost = numberOfMistakes > missLimit;
@@ -20,7 +20,7 @@ export default function Hangman() {
 
     const renderedKeyboard = keys.map((tile, index) => {
         function handleTileClicked(letter) {
-            numberOfMistakes = determineMistakes(guessedLetters, targetWord)
+            numberOfMistakes = determineMistakes(guessedLetters, targetWord);
             setGuessedLetters((currArr) => {
                 revealedGuesses = generateHangmanLetters(
                     [...currArr, letter],
@@ -52,7 +52,7 @@ export default function Hangman() {
     });
 
     function handleNewGame() {
-        numberOfMistakes = 0
+        numberOfMistakes = 0;
         setGuessedLetters([]);
         setTargetWord(getRandomWord());
         revealedGuesses = generateHangmanLetters([], targetWord);

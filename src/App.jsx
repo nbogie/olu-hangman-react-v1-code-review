@@ -3,7 +3,7 @@ import Hangman from "./Hangman";
 function App() {
     return (
         <div>
-            <Hangman/>
+            <Hangman />
         </div>
     );
 }
