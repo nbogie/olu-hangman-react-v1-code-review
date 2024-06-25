@@ -7,10 +7,8 @@ export default function Hangman() {
     const randomWord = getRandomWord();
     const [targetWord, setTargetWord] = useState(randomWord);
     const [guessedLetters, setGuessedLetters] = useState([]);
-    const [revealedGuesses, setRevealedGuesses] = useState(
-        generateHangmanLetters([], targetWord),
-    );
     const [numberOfGuesses, setNumberOfGuesses] = useState(0);
+    let revealedGuesses = generateHangmanLetters(guessedLetters, targetWord)
 
     const missLimit = targetWord.length + 3;
     const isGameLost = guessedLetters.length > missLimit;
@@ -23,11 +21,11 @@ export default function Hangman() {
         function handleTileClicked(letter) {
             setNumberOfGuesses((currVal) => currVal + 1);
             setGuessedLetters((currArr) => {
-                const updatedOutput = generateHangmanLetters(
+                revealedGuesses = generateHangmanLetters(
                     [...currArr, letter],
                     targetWord,
                 );
-                setRevealedGuesses(updatedOutput);
+                
 
                 return [...currArr, letter];
             });
@@ -57,7 +55,7 @@ export default function Hangman() {
         setNumberOfGuesses(0);
         setGuessedLetters([]);
         setTargetWord(getRandomWord());
-        setRevealedGuesses(generateHangmanLetters([], targetWord));
+        revealedGuesses = generateHangmanLetters([], targetWord);
     }
     return (
         <div className="game">
