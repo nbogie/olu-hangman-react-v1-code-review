@@ -1,69 +1,77 @@
-import { useState } from "react";
+//@ts-check
+import { useEffect, useState } from "react";
 import getRandomWord from "./utils/get-random-word";
 import generateKeys from "./utils/keyboard";
 import { generateHangmanLetters } from "./utils/hangman-logic";
-import determineMistakes from "./utils/determine-mistakes";
+import countNumberOfMistakes from "./utils/count-number-of-mistakes";
 
 export default function Hangman() {
-    const randomWord = getRandomWord();
-    const [targetWord, setTargetWord] = useState(randomWord);
+    const [targetWord, setTargetWord] = useState("helloworld");
     const [guessedLetters, setGuessedLetters] = useState([]);
-    let revealedGuesses = generateHangmanLetters(guessedLetters, targetWord);
-    let numberOfMistakes = determineMistakes(guessedLetters, targetWord);
+
+    useEffect(() => {
+        const randomWord = getRandomWord();
+        setTargetWord(randomWord);
+    }, []);
+
+    /** An array of letters and _ characters representing blah */
+    const revealedGuesses = generateHangmanLetters(guessedLetters, targetWord);
+    const numberOfMistakes = countNumberOfMistakes(guessedLetters, targetWord);
 
     const missLimit = targetWord.length;
-    const isGameLost = numberOfMistakes > missLimit;
-    const isGameWon = !revealedGuesses.includes("_");
-    const isGameOver = isGameWon || isGameLost;
 
-    const keys = generateKeys();
-
-    const renderedKeyboard = keys.map((tile, index) => {
-        function handleTileClicked(letter) {
-            numberOfMistakes = determineMistakes(guessedLetters, targetWord);
-            setGuessedLetters((currArr) => {
-                revealedGuesses = generateHangmanLetters(
-                    [...currArr, letter],
-                    targetWord,
-                );
-
-                return [...currArr, letter];
-            });
+    function calculateWinState() {
+        if (!revealedGuesses.includes("_")) {
+            return "win";
         }
 
-        const letterHasBeenGuessed = guessedLetters.includes(tile.letter);
-
-        if (letterHasBeenGuessed || isGameOver) {
-            tile.isClicked = true;
+        if (numberOfMistakes > missLimit) {
+            return "loss";
         }
+
+        return "in-progress";
+    }
+
+    const winState = calculateWinState();
+
+    const keyLetters = generateKeys();
+
+    function handleTileClicked(letter) {
+        setGuessedLetters((currArr) => {
+            return [...currArr, letter];
+        });
+    }
+
+    const renderedKeyboard = keyLetters.map((letter, index) => {
+        const letterHasBeenGuessed = guessedLetters.includes(letter);
+
+        const isDisabled = letterHasBeenGuessed || winState !== "in-progress";
 
         return (
             <button
                 key={index}
                 className="tile"
                 onClick={() => {
-                    handleTileClicked(tile.letter);
+                    handleTileClicked(letter);
                 }}
-                disabled={tile.isClicked}
+                disabled={isDisabled}
             >
-                {tile.letter}
+                {letter}
             </button>
         );
     });
 
     function handleNewGame() {
-        numberOfMistakes = 0;
         setGuessedLetters([]);
         setTargetWord(getRandomWord());
-        revealedGuesses = generateHangmanLetters([], targetWord);
     }
     return (
         <div className="game">
             <h1>Hangman Game</h1>
-            {isGameWon && <h2>You Win!</h2>}
-            {isGameLost && !isGameWon && <h2>You lose, too many guesses</h2>}
+            {winState === "win" && <h2>You Win!</h2>}
+            {winState === "loss" && <h2>You lose, too many guesses</h2>}
             <h2 className="revealed-guesses">
-                {!isGameOver ? revealedGuesses : targetWord}
+                {winState === "in-progress" ? revealedGuesses : targetWord}
             </h2>
             <h3>Guessed Letters: {guessedLetters}</h3>
             <p>Number of mistakes: {numberOfMistakes}</p>

@@ -6,18 +6,13 @@
  *
  */
 const generateHangmanLetters = (guessedLetters, wordToGuess) => {
-    const results = [];
-
-    for (let i = 0; i < wordToGuess.length; i++) {
-        const currentLetter = wordToGuess[i];
-        if (guessedLetters.includes(currentLetter)) {
-            results.push(currentLetter);
-        } else {
-            results.push("_");
-        }
-    }
-
-    return results;
+    return wordToGuess
+        .split("")
+        .map((letter) => displayCharacterForLetter(letter, guessedLetters));
 };
+
+export function displayCharacterForLetter(letter, guessedLetters) {
+    return guessedLetters.includes(letter) ? letter : "_";
+}
 
 export { generateHangmanLetters };
