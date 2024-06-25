@@ -2,16 +2,17 @@ import { useState } from "react";
 import getRandomWord from "./utils/get-random-word";
 import generateKeys from "./utils/keyboard";
 import { generateHangmanLetters } from "./utils/hangman-logic";
+import determineMistakes from "./utils/determine-mistakes";
 
 export default function Hangman() {
     const randomWord = getRandomWord();
     const [targetWord, setTargetWord] = useState(randomWord);
     const [guessedLetters, setGuessedLetters] = useState([]);
-    const [numberOfGuesses, setNumberOfGuesses] = useState(0);
-    let revealedGuesses = generateHangmanLetters(guessedLetters, targetWord)
+    let revealedGuesses = generateHangmanLetters(guessedLetters, targetWord);
+    let numberOfMistakes = determineMistakes(guessedLetters, targetWord)
 
-    const missLimit = targetWord.length + 3;
-    const isGameLost = guessedLetters.length > missLimit;
+    const missLimit = targetWord.length;
+    const isGameLost = numberOfMistakes > missLimit;
     const isGameWon = !revealedGuesses.includes("_");
     const isGameOver = isGameWon || isGameLost;
 
@@ -19,13 +20,12 @@ export default function Hangman() {
 
     const renderedKeyboard = keys.map((tile, index) => {
         function handleTileClicked(letter) {
-            setNumberOfGuesses((currVal) => currVal + 1);
+            numberOfMistakes = determineMistakes(guessedLetters, targetWord)
             setGuessedLetters((currArr) => {
                 revealedGuesses = generateHangmanLetters(
                     [...currArr, letter],
                     targetWord,
                 );
-                
 
                 return [...currArr, letter];
             });
@@ -52,7 +52,7 @@ export default function Hangman() {
     });
 
     function handleNewGame() {
-        setNumberOfGuesses(0);
+        numberOfMistakes = 0
         setGuessedLetters([]);
         setTargetWord(getRandomWord());
         revealedGuesses = generateHangmanLetters([], targetWord);
@@ -66,7 +66,7 @@ export default function Hangman() {
                 {!isGameOver ? revealedGuesses : targetWord}
             </h2>
             <h3>Guessed Letters: {guessedLetters}</h3>
-            <p>Number of guesses: {numberOfGuesses}</p>
+            <p>Number of mistakes: {numberOfMistakes}</p>
             <div className="keyboard">{renderedKeyboard}</div>
             <button onClick={handleNewGame}>New Game</button>
         </div>
